@@ -25,7 +25,7 @@ public class PassaporteService {
     }
 
     public PassaporteResponseDTO create(PassaporteRequestDTO dto) {
-        if (passaporteRepository.findByNumero(dto.getNumero()).isPresent()) {
+        if (passaporteRepository.findByNumero(String.valueOf(dto.getNumero())).isPresent()) {
             throw new RuntimeException("Número de passaporte já existe");
         }
         if (dto.getDataValidade().isBefore(dto.getDataEmissao()) ||
@@ -40,12 +40,12 @@ public class PassaporteService {
             throw new RuntimeException("Pessoa já possui um passaporte");
         }
 
-        Passaporte passaporte = new Passaporte();  // ✅ Criar PRIMEIRO
+        Passaporte passaporte = new Passaporte();
         passaporte.setNumero(dto.getNumero());
         passaporte.setPaisEmissor(dto.getPaisEmissor());
         passaporte.setDataEmissao(dto.getDataEmissao());
         passaporte.setDataValidade(dto.getDataValidade());
-        passaporte.setPessoa(pessoa);  // ✅ Depois associar
+        passaporte.setPessoa(pessoa);
 
         Passaporte salvo = passaporteRepository.save(passaporte);
         return toResponseDTO(salvo);

@@ -1,6 +1,7 @@
 package SpringBoot.passaporte.dto.Pessoa;
 
 import SpringBoot.passaporte.dto.Passaporte.PassaporteResponseDTO;
+import SpringBoot.passaporte.dto.Viagem.ViagemResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

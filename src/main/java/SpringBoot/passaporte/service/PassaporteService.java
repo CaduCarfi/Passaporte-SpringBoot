@@ -1,9 +1,7 @@
 package SpringBoot.passaporte.service;
 
-import SpringBoot.passaporte.PassaporteApplication;
 import SpringBoot.passaporte.dto.Passaporte.PassaporteRequestDTO;
 import SpringBoot.passaporte.dto.Passaporte.PassaporteResponseDTO;
-import SpringBoot.passaporte.dto.Pessoa.PessoaRequestDTO;
 import SpringBoot.passaporte.dto.Pessoa.PessoaResponseDTO;
 import SpringBoot.passaporte.model.Passaporte;
 import SpringBoot.passaporte.model.Pessoa;

@@ -1,12 +1,12 @@
 package SpringBoot.passaporte.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "pessoa")
@@ -29,6 +29,8 @@ public class Pessoa {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "passaporte_id", unique = true)
     private Passaporte passaporte;
+    @OneToMany(mappedBy = "pessoa")
+    private List<Viagem> viagem;
 
 
 }

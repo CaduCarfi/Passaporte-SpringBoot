@@ -51,9 +51,8 @@ public class ViagemController {
     }
 
     @GetMapping("/destino-mais-visitado")
-    public ResponseEntity<TipoDeRetorno> nomeDoMetodo() {
-        TipoDeRetorno resultado = viagemService.algumMetodo();
-        return ResponseEntity.ok(resultado);
+    public ResponseEntity<String> destinoMaisVisitado() {
+        String destino = viagemService.destinoMaisVisitado();
+        return ResponseEntity.ok(destino);
     }
-
 }

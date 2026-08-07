@@ -2,14 +2,12 @@ package SpringBoot.passaporte.controller;
 
 import SpringBoot.passaporte.dto.Viagem.ViagemRequestDTO;
 import SpringBoot.passaporte.dto.Viagem.ViagemResponseDTO;
-import SpringBoot.passaporte.service.PessoaService;
 import SpringBoot.passaporte.service.ViagemService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -17,11 +15,9 @@ import java.util.List;
 public class ViagemController {
 
     private final ViagemService viagemService;
-    private final PessoaService pessoaService;
 
-    public ViagemController(ViagemService viagemService, PessoaService pessoaService) {
+    public ViagemController(ViagemService viagemService) {
         this.viagemService = viagemService;
-        this.pessoaService = pessoaService;
     }
 
     @PostMapping
@@ -38,8 +34,8 @@ public class ViagemController {
 
     @GetMapping
     public ResponseEntity<List<ViagemResponseDTO>> listar() {
-        ViagemResponseDTO viagem = (ViagemResponseDTO) viagemService.findAll();
-        return ResponseEntity.ok(Collections.singletonList(viagem));
+        List<ViagemResponseDTO> viagem = viagemService.findAll();
+        return ResponseEntity.ok(viagem);
     }
 
     @PutMapping("/{id}")
@@ -52,6 +48,12 @@ public class ViagemController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         viagemService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/destino-mais-visitado")
+    public ResponseEntity<TipoDeRetorno> nomeDoMetodo() {
+        TipoDeRetorno resultado = viagemService.algumMetodo();
+        return ResponseEntity.ok(resultado);
     }
 
 }

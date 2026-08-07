@@ -24,14 +24,18 @@ public class ViagemService {
 
     public ViagemResponseDTO create(ViagemRequestDTO dto) {
 
-        if (dto.getDataSaida().isBefore(dto.getDataRetorno()) || dto.getDataSaida().isEqual(dto.getDataRetorno())) {
-            throw new RuntimeException("Data de retorno deve ser maior que a data de saida");
+        if (dto.getDataRetorno() != null && dto.getDataRetorno().isBefore(dto.getDataSaida())) {
+            throw new RuntimeException("Data de retorno não pode ser anterior à data de saída");
         }
+
+        Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
+                .orElseThrow(() -> new RuntimeException("Pessoa não existe"));
 
         Viagem viagem = new Viagem();
         viagem.setDestino(dto.getDestino());
         viagem.setDataSaida(dto.getDataSaida());
         viagem.setDataRetorno(dto.getDataRetorno());
+        viagem.setPessoa(pessoa);
 
         Viagem salvo = viagemRepository.save(viagem);
         return toResponseDTO(salvo);
@@ -52,12 +56,18 @@ public class ViagemService {
     }
 
     public ViagemResponseDTO atualizar(Long id, ViagemRequestDTO dto) {
+        if (dto.getDataRetorno() != null && dto.getDataRetorno().isBefore(dto.getDataSaida())) {
+            throw new RuntimeException("Data de retorno não pode ser anterior à data de saída");
+        }
         Viagem viagem = viagemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Viagem não encontrada"));
+        Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
+                .orElseThrow(() -> new RuntimeException("Pessoa não existe"));
 
         viagem.setDestino(dto.getDestino());
         viagem.setDataSaida(dto.getDataSaida());
         viagem.setDataRetorno(dto.getDataRetorno());
+        viagem.setPessoa(pessoa);
 
         Viagem atualizado = viagemRepository.save(viagem);
         return toResponseDTO(atualizado);
@@ -73,7 +83,7 @@ public class ViagemService {
     public ViagemResponseDTO toResponseDTO(Viagem viagem) {
         PessoaResponseDTO pessoaResponseDTO = null;
         if (viagem.getPessoa() != null) {
-            pessoaResponseDTO = toViagemResponseDTO(viagem.getPessoa());
+            pessoaResponseDTO = toPessoaResponseDTO(viagem.getPessoa());
         }
         return new ViagemResponseDTO(
                 viagem.getId(),
@@ -84,7 +94,7 @@ public class ViagemService {
         );
     }
 
-    public PessoaResponseDTO toViagemResponseDTO(Pessoa pessoa) {
+    public PessoaResponseDTO toPessoaResponseDTO(Pessoa pessoa) {
         return new PessoaResponseDTO(
                 pessoa.getId(),
                 pessoa.getNome(),
@@ -93,5 +103,15 @@ public class ViagemService {
                 pessoa.getEmail(),
                 null
         );
+    }
+
+    public String destinoMaisVisitado() {
+        List<String> destinos = viagemRepository.findDestinosOrdenadosPorFrequencia();
+
+        if (destinos.isEmpty()) {
+            throw new RuntimeException("Nenhuma viagem cadastrada");
+        }
+
+        return destinos.get(0);  // pega o primeiro (mais visitado)
     }
 }

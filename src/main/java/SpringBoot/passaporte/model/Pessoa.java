@@ -29,7 +29,7 @@ public class Pessoa {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "passaporte_id", unique = true)
     private Passaporte passaporte;
-    @OneToMany(mappedBy = "pessoa")
+    @OneToMany(mappedBy ="pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Viagem> viagem;
 
 

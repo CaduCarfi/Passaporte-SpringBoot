@@ -30,10 +30,8 @@ public class PassaporteService {
                 dto.getDataValidade().isEqual(dto.getDataEmissao())) {
             throw new RuntimeException("Data de validade deve ser maior que a data de emissão");
         }
-
         Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
                 .orElseThrow(() -> new RuntimeException("Pessoa não existe"));
-
         if (pessoa.getPassaporte() != null) {
             throw new RuntimeException("Pessoa já possui um passaporte");
         }
@@ -44,9 +42,11 @@ public class PassaporteService {
         passaporte.setDataEmissao(dto.getDataEmissao());
         passaporte.setDataValidade(dto.getDataValidade());
         passaporte.setPessoa(pessoa);
+        pessoa.setPassaporte(passaporte);
 
-        Passaporte salvo = passaporteRepository.save(passaporte);
-        return toResponseDTO(salvo);
+        Pessoa pessoaSalva = pessoaRepository.save(pessoa);
+
+        return toResponseDTO(pessoaSalva.getPassaporte());
     }
 
     public List<PassaporteResponseDTO> findAll() {
